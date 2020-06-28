@@ -1,0 +1,86 @@
+<?php View::flash(); ?>
+
+<script type="text/javascript">
+    $(function() {
+        $('table').kgrid({
+            order_attr      : '<?php echo (APP_AJAX) ? 'class="js-link js-spinner"' : ''; ?>',
+            order_to        : $.KumbiaPHP.publicPath+'ejemplos/acuentas/listar/'
+        });     
+    });
+</script>
+
+<div class="container shell-view">
+
+    <?php View::process($page_module, $page_title, $set_title); ?>
+
+    <?php 
+    echo DwHtml::button("ejemplos/acuentas/agregar/", 'agregar', array('class'=>'btn-success'), 'fa-plus', APP_AJAX);
+    ?>
+    <?php
+    $acta = new Acuentas();
+
+    // Para Exportar datos a Excel
+    if ($acta->count("id > 0") > 0) {
+         echo DwHtml::button('ejemplos/acuentas/exportar/', 'Exportar a Excel', array('class'=>'btn-info no-ajax no-spinner'), 'fa-download');
+    }
+    ?>
+    <?php
+    echo DwHtml::button('ejemplos/acuentas/subir/', 'Importar datos', array('class'=>'btn-success', 'id'=>'subir_archivo'), 'fa-upload', APP_AJAX);    
+    ?>
+    <?php
+    // Para imprimir el Catálogo de cuentas
+    $acta1 = new Acuentas();
+
+    if ($acta1->count("id > 0") > 0) {
+        echo DwButton::report('acuentas/listar/', 'html', 'Catalogo de cuentas', 'imprimir');
+    }
+    ?>
+
+    <div class="container-overflow">
+
+        <table class="table table-bordered table-hover table-striped table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th class="col-hidden" data-search="codigo_cta" data-order="codigo_cta">Codigo</th>
+                    <th class="col-hidden" data-search="nombre_cta" data-order="nombre_cta">Nombre de la cuenta</th>
+                    <th class="col-blocked text-center" style="width: 100px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($acuentaspag as $acuentas): ?>
+                    <?php $key_upd = Security::setKey($acuentas->id, 'upd_acuentas'); ?>
+                    <?php $key_del = Security::setKey($acuentas->id, 'del_acuentas'); ?>
+                    <tr>
+                        <td><?php echo $acuentas->id; ?></td>
+                        <td><?php echo $acuentas->codigo_cta; ?></td>
+                        <td><?php echo $acuentas->nombre_cta; ?></td>
+                        <td>
+                        <?php echo DwHtml::buttonTable('Modificar Cuenta', "ejemplos/acuentas/editar/$key_upd/", null, 'info', 'fa-edit'); ?>
+                        <?php     
+                        // Compruebo que el usuario tenta privilegios suficientes para estar usar esta función
+                        if (Session::get('perfil_id')=='1' or Session::get('perfil_id')=='4') {
+                        ?>
+                            <?php echo DwHtml::buttonTable('Eliminar Cuenta', "#", array('class'=>'js-confirm', 'data-to'=>PUBLIC_PATH."ejemplos/acuentas/eliminar/$key_del/", 'msg-title'=>'Eliminar Cuenta', 'msg'=>'¿Estás seguro de eliminar esta Cuenta? <br />Recordá que esta operación no se puede revertir.'), 'danger', 'fa-warning'); ?>
+                        <?php
+                        }
+                        ?>
+                        </td>
+                    </tr>
+                    <?php $acuentas->counter++; ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    
+    $(function(){
+        // Esto es para evitar que el sub-menú se esconda al recargar la página
+        $("#sub-menu-ejemplos").removeClass("hidden");
+    });  
+  
+</script>

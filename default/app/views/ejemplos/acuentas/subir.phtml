@@ -1,0 +1,64 @@
+<?php View::flash(); ?>
+<style type="text/css">
+    .tab-pane { min-height: 200px;}
+</style>
+
+<div class="container shell-view">
+
+    <?php //View::process($page_module, $page_title, $set_title); ?>
+
+    <?php echo DwForm::openMultipart('', array('class'=>'js-validate')); ?>
+        <ul class="nav nav-tabs">
+            <li><a href="#tab1" class="active" data-toggle="tab">Importar datos de archivo Excel (xls) al Catalogo de Cuentas</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php echo "Paso 1: ". DwHtml::outLink(PUBLIC_PATH.'default/public/archivos/cargar_xls_cuentas.xls', 'Descargar plantilla de Excel (xls) que utilizará para importar los datos', array('target'=>'_blank')); ?>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php echo "Paso 2: Llenar los datos en la plantilla de Excel (xls) que acaba de descargar."; ?>
+                    </div>
+                </div>
+                <br>
+                <div class="row fileupload-buttonbar">
+
+                    <div class="col-md-6" style="margin-bottom: 20px;">
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <?php echo DwForm::upload('logo', array('data-to'=>PUBLIC_PATH.'ejemplos/acuentas/upload/', 'data-size'=>5000000, 'data-files'=>'/(\.|\/)(xls|xlsx)$/i', 'data-success'=>'loadImg'), 'Paso 3: Cargar Archivo de Excel (xls)...'); ?>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <?php echo DwForm::hidden('archivo', NULL, ''); ?>
+
+            <div class="row">
+                <div class="form-actions">
+                    <?php echo DwForm::send('Importar'); ?>
+                    <?php echo DwForm::cancel(); ?>
+                </div>
+            </div>
+        </div>
+    
+    <?php echo DwForm::close(); ?>
+
+</div>
+
+<script type="text/javascript">
+    
+    function loadImg(result, input) {
+        $("#archivo").val(result.name);
+    }
+  
+</script>

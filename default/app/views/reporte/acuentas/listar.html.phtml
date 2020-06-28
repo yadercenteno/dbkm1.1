@@ -1,0 +1,34 @@
+<?php View::flash(); ?>
+
+<div class="container shell-view">
+    <?php echo Html::img("upload/empresa/logo_gg.png", APP_NAME); ?>
+    <br>
+    <?php View::process($page_module, $page_title, $set_title); ?>
+    <table width="98%">
+        <tr>
+            <td>
+                <div align="right" style="font-size: 12px"><?php echo DwHtml::link('#', 'Imprimir este reporte', array('class'=>'no-ajax no-spinner', 'onClick'=>'window.print()'), 'print'); ?></div>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table border="1" class="table table-bordered table-hover table-striped table-condensed table-responsive">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th class="col-collapse" data-search="codigo_cta">Codigo</th>
+                <th class="col-collapse" data-search="nombre_cta">Nombre de la cuenta</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($acuentaspag as $acuentas): ?>
+                <tr>
+                    <td><?php echo $acuentas->id; ?></td>
+                    <td><?php echo $acuentas->codigo_cta; ?></td>
+                    <td><?php echo $acuentas->nombre_cta; ?></td>
+                </tr>
+                <?php $acuentas->counter++; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>

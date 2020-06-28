@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">    
+    <head>
+        <title><?php echo $page_title; ?></title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="<?php echo APP_CHARSET; ?>">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content="noindex,nofollow" /> 
+        <link rel="SHORTCUT ICON" href="<?php echo PUBLIC_PATH; ?>/img/favicon.png">
+        <?php Tag::css('bootstrap/bootstrap.min'); ?>
+        <?php Tag::css('bootstrap/bootstrap-theme.min'); ?>        
+        <?php Tag::css('bootstrap/bootstrap-datetimepicker.min'); ?>
+        <?php Tag::css('bootstrap/typehead'); ?>
+        <?php Tag::css('style'); ?>
+        <?php Tag::css('backend/style'); ?>
+        <?php Tag::css('font-awesome.min'); ?>               
+        <?php echo Html::includeCss(); ?>
+        <?php if(!APP_LOCAL) { ?>
+            <link href="https://fonts.googleapis.com/css?family=Play:400,700" rel="stylesheet" type="text/css">
+        <?php } ?>
+        <style type="text/css">
+            .row-fluid .span4 { font-size: 14px;}
+        </style>
+
+        <?php echo Tag::js('jquery/jquery.min').PHP_EOL; ?>        
+        
+    </head>
+    
+    <body style="padding-top: 40px !important; font-family: Play,Lucila,Verdana,sans-serif;">
+
+        <?php DwMenu::load(Menu::FRONTEND); ?>
+
+        <?php View::partial('frontend/header'); ?>
+
+        <div id="shell-load">
+            <div id="console" class="container"></div>
+            <div id="shell-content" class="container-fluid">
+                <noscript><h5 style="text-align: center;">¡Tu navegador no soporta Javascript!.. Activa el uso de Javascript en tu navegador.</h5><meta http-equiv="refresh" content="1; URL=<?php echo PUBLIC_PATH; ?>sistema/login/salir/no-script/" /></noscript>
+                <?php View::content(); ?>
+            </div>
+        </div>
+        
+        <?php echo Tag::js('html5shiv').PHP_EOL; ?>        
+        <?php echo Tag::js('bootstrap/bootstrap.min').PHP_EOL; ?>
+    </body>
+    
+</html>

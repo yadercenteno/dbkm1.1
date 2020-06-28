@@ -1,0 +1,453 @@
+<?php View::flash(); ?>
+<script type="text/javascript">
+    $(function() {       
+        $('table').kgrid({
+            form_container  : 'shell-content',
+            order_attr      : '<?php echo (APP_AJAX) ? 'class="js-link js-spinner"' : ''; ?>',
+            order_to        : $.KumbiaPHP.publicPath+'ejemplos/apresupgeneral/listar/'
+        }); 
+    });
+</script>
+
+<!-- Codigo CSS personalizado-->
+<style type="text/css">
+    .editar_cuenta select { width: 100px !important; }
+</style>
+
+<div class="container shell-view">
+    <?php View::process($page_module, $page_title, $set_title); ?>
+    
+    <?php
+    $apg = new Apresupgeneral();
+
+    echo DwHtml::button('ejemplos/apresupgeneral/exportar/', 'Exportar a Excel', array('class'=>'btn-info no-ajax no-spinner'), 'fa-download');    
+    ?>    
+    <?php
+    echo DwButton::report('apresupgeneral/listar/', 'html', 'Presupuesto general', 'imprimir');
+    ?>
+
+    <div class="container-overflow" id="data-result">
+        <table class="table table-bordered table-hover table-condensed table-responsive">
+            <thead>
+                <tr bgcolor="#EEF8FC">
+                    <th>ID</th>
+                    <th class="col-hidden" data-search="codigo_cta" data-order="codigo_cta">Cuenta</th>
+                    <th class="col-hidden" data-search="mes1" data-order="mes1"><?php echo $nombre_mes1; ?></th>
+                    <th class="col-hidden" data-search="mes2" data-order="mes2"><?php echo $nombre_mes2; ?></th>
+                    <th class="col-hidden" data-search="mes3" data-order="mes3"><?php echo $nombre_mes3; ?></th>
+                    <th class="col-hidden" data-search="mes4" data-order="mes4"><?php echo $nombre_mes4; ?></th>
+                    <th class="col-hidden" data-search="mes5" data-order="mes5"><?php echo $nombre_mes5; ?></th>
+                    <th class="col-hidden" data-search="mes6" data-order="mes6"><?php echo $nombre_mes6; ?></th>
+                    <th class="col-hidden" data-search="mes7" data-order="mes7"><?php echo $nombre_mes7; ?></th>
+                    <th class="col-hidden" data-search="mes8" data-order="mes8"><?php echo $nombre_mes8; ?></th>
+                    <th class="col-hidden" data-search="mes9" data-order="mes9"><?php echo $nombre_mes9; ?></th>
+                    <th class="col-hidden" data-search="mes10" data-order="mes10"><?php echo $nombre_mes10; ?></th>
+                    <th class="col-hidden" data-search="mes11" data-order="mes11"><?php echo $nombre_mes11; ?></th>
+                    <th class="col-hidden" data-search="mes12" data-order="mes12"><?php echo $nombre_mes12; ?></th>
+                    <th class="col-hidden">Total</th>
+                    <th class="col-hidden" data-search="observaciones" data-order="observaciones">Notas</th>
+                    <th class="col-blocked text-center" style="width: 50px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                // Compruebo que el usuario tenta privilegios suficientes para estar usar esta función
+                if (Session::get('perfil_id')=='1' or Session::get('perfil_id')=='4' or Session::get('perfil_id')=='5') {
+                ?>
+                <tr>
+                    <td colspan="2"> 
+                        <?php echo DwForm::dbSelect('datocuenta_id', 'nombreespecial', array('config/acuentas', 'getListaCtas'), NULL, array('class'=>'input-large', 'id'=>'datocuenta_id'), NULL, ''); ?>
+                    </td>
+                    <td> 
+                        <input name="dato-mes1" type="text" id="dato-mes1" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td> 
+                        <input name="dato-mes2" type="text" id="dato-mes2" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td> 
+                        <input name="dato-mes3" type="text" id="dato-mes3" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td>
+                        <input name="dato-mes4" type="text" id="dato-mes4" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td>
+                        <input name="dato-mes5" type="text" id="dato-mes5" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td>
+                        <input name="dato-mes6" type="text" id="dato-mes6" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td>
+                        <input name="dato-mes7" type="text" id="dato-mes7" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td>
+                        <input name="dato-mes8" type="text" id="dato-mes8" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td>
+                        <input name="dato-mes9" type="text" id="dato-mes9" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td>
+                        <input name="dato-mes10" type="text" id="dato-mes10" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td>
+                        <input name="dato-mes11" type="text" id="dato-mes11" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td>
+                        <input name="dato-mes12" type="text" id="dato-mes12" maxlength="19" style="width: 40px;" value="0"/>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        <input name="dato-observaciones" type="text" id="dato-observaciones" style="width: 40px;"/>
+                    </td>
+                    <td>
+                    	<div align="center">
+                        	<?php
+                            echo DwHtml::button('#', '', array('class'=>'btn-success', 'onclick'=>'agregarpresup()'), 'fa-plus');
+                            ?>
+                    	</div>
+                    </td>                   
+                </tr>
+                <?php
+                }
+
+                $total_mes1 = 0;
+                $total_mes2 = 0;
+                $total_mes3 = 0;
+                $total_mes4 = 0;
+                $total_mes5 = 0;
+                $total_mes6 = 0;
+                $total_mes7 = 0;
+                $total_mes8 = 0;
+                $total_mes9 = 0;
+                $total_mes10 = 0;
+                $total_mes11 = 0;
+                $total_mes12 = 0;
+                $total_cta = 0;
+                
+                foreach($apresupgeneralpag as $apresupgeneral): 
+                    $key_del = Security::setKey($apresupgeneral->id, 'del_apresupgeneral'); ?> 
+                    <tr>
+                        <td><?php echo $apresupgeneral->id; ?></td>
+                        <td><?php                         
+                        echo "<div class='editar_cuenta' id='".$apresupgeneral->id."@cuenta_id'>".$apresupgeneral->codigo_cta." ".$apresupgeneral->nombre_cta."</div>";                        
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes1'>".$apresupgeneral->mes1."</div>";
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes2'>". $apresupgeneral->mes2."</div>";
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes3'>". $apresupgeneral->mes3."</div>";
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes4'>". $apresupgeneral->mes4."</div>";
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes5'>". $apresupgeneral->mes5."</div>";
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes6'>". $apresupgeneral->mes6."</div>";
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes7'>". $apresupgeneral->mes7."</div>"; 
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes8'>". $apresupgeneral->mes8."</div>"; 
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes9'>". $apresupgeneral->mes9."</div>";       
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes10'>". $apresupgeneral->mes10."</div>"; 
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes11'>". $apresupgeneral->mes11."</div>";
+                        ?></td>
+                        <td><?php 
+                        echo "<div class='editar_mes' align='right' id='".$apresupgeneral->id."@mes12'>". $apresupgeneral->mes12."</div>";
+                        ?></td>
+                        <td><?php                    
+                        $tot_cta = $apresupgeneral->mes1+$apresupgeneral->mes2+$apresupgeneral->mes3+$apresupgeneral->mes4+$apresupgeneral->mes5+$apresupgeneral->mes6+$apresupgeneral->mes7+$apresupgeneral->mes8+$apresupgeneral->mes9+$apresupgeneral->mes10+$apresupgeneral->mes11+$apresupgeneral->mes12;
+                        
+                        echo "<div align='right' id='".$apresupgeneral->id."@presup_total'>".number_format((float)$tot_cta, 2, '.', '')."</div>"; ?></td>
+                        <td><?php echo $apresupgeneral->observaciones; ?></td>
+                        <td>
+                        <?php 
+                        // Compruebo que el usuario tenta privilegios suficientes para estar usar esta función
+                        if (Session::get('perfil_id')=='1' or Session::get('perfil_id')=='4' or Session::get('perfil_id')=='5') {
+                            echo DwHtml::buttonTable('Eliminar Presupuesto', "#", array('class'=>'js-confirm', 'data-to'=>PUBLIC_PATH."ejemplos/apresupgeneral/eliminar/$key_del/", 'msg-title'=>'Eliminar Presupuesto', 'msg'=>'¿Estás seguro de eliminar el presupuesto general de esta Cuenta? <br />Recordá que esta operación no se puede revertir.'), 'danger', 'fa-warning');
+                        }
+                        ?>
+                        </td>
+                    </tr>
+                    <?php $apresupgeneral->counter++;
+                    
+                    // Saco los totales por cada mes
+                    $total_mes1=$total_mes1+$apresupgeneral->mes1;
+                    $total_mes2=$total_mes2+$apresupgeneral->mes2;    
+                    $total_mes3=$total_mes3+$apresupgeneral->mes3;
+                    $total_mes4=$total_mes4+$apresupgeneral->mes4;
+                    $total_mes5=$total_mes5+$apresupgeneral->mes5;
+                    $total_mes6=$total_mes6+$apresupgeneral->mes6;
+                    $total_mes7=$total_mes7+$apresupgeneral->mes7;
+                    $total_mes8=$total_mes8+$apresupgeneral->mes8;
+                    $total_mes9=$total_mes9+$apresupgeneral->mes9;
+                    $total_mes10=$total_mes10+$apresupgeneral->mes10;
+                    $total_mes11=$total_mes11+$apresupgeneral->mes11;
+                    $total_mes12=$total_mes12+$apresupgeneral->mes12;
+                    $total_cta=$total_cta+$tot_cta;
+
+                    ?>
+                <?php endforeach; ?>
+                <tr bgcolor="#EEF8FC">
+                    <td colspan="2">
+                        <div align="right" style="font-size: 14px"><strong>PRESUPUESTO TOTAL....</strong></div>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes1"><?php echo number_format((float)$total_mes1, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes2"><?php echo number_format((float)$total_mes2, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes3"><?php echo number_format((float)$total_mes3, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes4"><?php echo number_format((float)$total_mes4, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes5"><?php echo number_format((float)$total_mes5, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes6"><?php echo number_format((float)$total_mes6, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes7"><?php echo number_format((float)$total_mes7, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes8"><?php echo number_format((float)$total_mes8, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes9"><?php echo number_format((float)$total_mes9, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes10"><?php echo number_format((float)$total_mes10, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes11"><?php echo number_format((float)$total_mes11, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 14px" id="total_mes12"><?php echo number_format((float)$total_mes12, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td>
+                        <strong><div align="right" style="font-size: 16px" id="gran_total"><?php echo number_format((float)$total_cta, 2, '.', ''); ?></div></strong>
+                    </td>
+                    <td colspan="2">
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<?php 
+// Compruebo que el usuario tenta privilegios suficientes para estar usar esta función
+if (Session::get('perfil_id')=='1' or Session::get('perfil_id')=='4' or Session::get('perfil_id')=='5') {
+
+// Esto es para poder hacer ediciones inline
+echo Tag::js('jquery/jquery.jeditable.min');
+?>
+
+<div id="form-agregar-presup" aria-hidden='true' aria-labelledby='titulo-form-agregar-presup' class='modal' role='dialog' tabindex='-1'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+        <?php echo DwForm::open('ejemplos/apresupgeneral/agregarpresup/', '', array('id'=>'form-modal', 'class'=>'js-validate js-remote', 'data-to'=>'shell-content')); ?>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class='modal-title' id='titulo-form-agregar-presup'>Agregar cuenta al Presupuesto General</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        Estos datos se agregarán al presupuesto general, ¿Estás seguro de querer hacerlo?
+                        <?php echo DwForm::hidden('cuenta_id',  NULL, "<script type='text/javascript'>document.getElementById('datocuenta_id').value;</script>"); ?>
+                        <?php echo DwForm::hidden('mes1', NULL, "<script type='text/javascript'>document.getElementById('dato-mes1').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes2', NULL, "<script type='text/javascript'>document.getElementById('dato-mes2').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes3', NULL, "<script type='text/javascript'>document.getElementById('dato-mes3').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes4', NULL, "<script type='text/javascript'>document.getElementById('dato-mes4').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes5', NULL, "<script type='text/javascript'>document.getElementById('dato-mes5').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes6', NULL, "<script type='text/javascript'>document.getElementById('dato-mes6').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes7', NULL, "<script type='text/javascript'>document.getElementById('dato-mes7').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes8', NULL, "<script type='text/javascript'>document.getElementById('dato-mes8').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes9', NULL, "<script type='text/javascript'>document.getElementById('dato-mes9').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes10', NULL, "<script type='text/javascript'>document.getElementById('dato-mes10').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes11', NULL, "<script type='text/javascript'>document.getElementById('dato-mes11').value</script>"); ?>
+                        <?php echo DwForm::hidden('mes12', NULL, "<script type='text/javascript'>document.getElementById('dato-mes12').value</script>"); ?>
+                        <?php echo DwForm::hidden('observaciones', NULL, "<script type='text/javascript'>document.getElementById('dato-observaciones').value</script>"); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">                
+                <?php echo DwForm::send("Si, Agregar", "fa-save", array('class'=>'btn btn-primary'),"Si, Agregar"); ?>
+                <button class="btn fa fa-ban" data-dismiss="modal" aria-hidden="true">&nbsp;Cancelar</button>
+            </div>
+        <?php echo DwForm::close(); ?>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function agregarpresup(refer) {
+        var positivo=1;
+
+        if (document.getElementById("datocuenta_id").value=="") {
+            positivo=0;    
+            flashError('Todavía NO seleccionás una Cuenta para agregar al presupuesto actual, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes1").value) || document.getElementById("dato-mes1").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 1 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes2").value) || document.getElementById("dato-mes2").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 2 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes3").value) || document.getElementById("dato-mes3").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 3 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes4").value) || document.getElementById("dato-mes4").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 4 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes5").value) || document.getElementById("dato-mes5").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 5 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes6").value) || document.getElementById("dato-mes6").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 6 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes7").value) || document.getElementById("dato-mes7").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 7 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes8").value) || document.getElementById("dato-mes8").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 8 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes9").value) || document.getElementById("dato-mes9").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 9 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes10").value) || document.getElementById("dato-mes10").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 10 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes11").value) || document.getElementById("dato-mes11").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 11 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (isNaN(document.getElementById("dato-mes12").value) || document.getElementById("dato-mes12").value=="") {
+            positivo=0;    
+            flashError('El valor del presupuesto del Mes 12 NO es un numero valido, por lo cual NO se puede continuar...');
+        }
+
+        if (positivo==1) {
+            document.getElementById("cuenta_id").value=document.getElementById("datocuenta_id").value;
+            document.getElementById("mes1").value=document.getElementById("dato-mes1").value;
+            document.getElementById("mes2").value=document.getElementById("dato-mes2").value;
+            document.getElementById("mes3").value=document.getElementById("dato-mes3").value;
+            document.getElementById("mes4").value=document.getElementById("dato-mes4").value;
+            document.getElementById("mes5").value=document.getElementById("dato-mes5").value;
+            document.getElementById("mes6").value=document.getElementById("dato-mes6").value;
+            document.getElementById("mes7").value=document.getElementById("dato-mes7").value;
+            document.getElementById("mes8").value=document.getElementById("dato-mes8").value;
+            document.getElementById("mes9").value=document.getElementById("dato-mes9").value;
+            document.getElementById("mes10").value=document.getElementById("dato-mes10").value;
+            document.getElementById("mes11").value=document.getElementById("dato-mes11").value;
+            document.getElementById("mes12").value=document.getElementById("dato-mes12").value;
+            document.getElementById("observaciones").value=document.getElementById("dato-observaciones").value;
+            
+            $('#form-agregar-presup').modal('show');
+        }
+    }
+
+    $(function(){
+        // Esto es para evitar que el sub-menú se esconda al recargar la página
+        $("#sub-menu-ejemplos").removeClass("hidden");
+
+        $("#form-modal").on('submit', function() {
+            flashInfo('Agregando la cuenta en el presupuesto general...<br />Esta operación puede demorar unos minutos.');
+            $('#form-agregar-presup').modal('hide');
+        });
+
+        var listado_cuentas = <?php echo $listado_cuentas; ?>;
+
+        $(".editar_cuenta").editable($.KumbiaPHP.publicPath+"ejemplos/apresupgeneral/guardarDato/", {
+            indicator : 'Guardando...',
+            tooltip   : 'Click para editar...',
+            type      : "select",
+            data      : listado_cuentas,
+            style     : "inherit"
+        });
+
+        $('.editar_mes').editable($.KumbiaPHP.publicPath+"ejemplos/apresupgeneral/guardarDato/", {
+            indicator : 'Guardando...',
+            tooltip   : 'Click para editar...',
+            type      : 'number',
+            cancel    : 'Cancelar',
+            submit    : 'Guardar',
+            placeholder: 'Click para editar...',
+            min: 0,
+            step: 0.01,
+            submitdata : function (value, settings) {
+                return {
+                    "valor_viejo": this.revert
+                };
+            },
+            callback : function(result, settings, submitdata) {
+                var campos = submitdata.id.split('@');
+                var id_presup = campos[0];
+                var nombre_mes = campos[1];
+                var valor_mes = parseFloat(result);
+
+                // Calculo los cambios en la linea modificada                                    
+                var diferencia = valor_mes - parseFloat(submitdata.valor_viejo);
+                var presup_total_fila = parseFloat(document.getElementById(id_presup+"@presup_total").innerHTML);
+                var total_mes = parseFloat(document.getElementById('total_'+nombre_mes).innerHTML);
+                var gran_total = parseFloat(document.getElementById('gran_total').innerHTML);
+
+                var nuevo_presup_total_fila = presup_total_fila + diferencia;
+                var nuevo_total_mes = total_mes + diferencia;
+                var nuevo_gran_total = gran_total + diferencia;
+
+                // Hago el cambio en el total de la línea modificada
+                document.getElementById(id_presup+"@presup_total").innerHTML = parseFloat(nuevo_presup_total_fila).toFixed(2).toString();
+
+                // Hago los cambios en los grandes totales
+                document.getElementById("total_"+nombre_mes).innerHTML = parseFloat(nuevo_total_mes).toFixed(2).toString();
+                document.getElementById("gran_total").innerHTML = parseFloat(nuevo_gran_total).toFixed(2).toString();
+            }
+        });
+    });
+</script>
+<?php
+}
+?>

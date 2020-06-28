@@ -1,0 +1,38 @@
+<?php
+//Exportar datos de php a Excel
+header("Content-Type: application/vnd.ms-excel");
+header("Expires: 0");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+header("content-disposition: attachment;filename=catalogo_cuentas.xls");
+?>
+
+<HTML LANG="es">
+<head>
+<TITLE>Catálogo de Cuentas</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+    <h1>Catálogo de Cuentas</h1>
+    <br>
+    <table border="1" class="table table-bordered table-hover table-striped table-condensed table-responsive">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th class="col-collapse" data-search="codigo_cta">Codigo</th>
+                <th class="col-collapse" data-search="nombre_cta">Nombre de la cuenta</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($acuentaspag as $acuentas): ?>
+                <tr>
+                    <td><?php echo $acuentas->id; ?></td>
+                    <td><?php echo $acuentas->codigo_cta; ?></td>
+                    <td><?php echo $acuentas->nombre_cta; ?></td>
+                </tr>
+                <?php $acuentas->counter++; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</BODY>
+</HTML>
+?>

@@ -1,0 +1,168 @@
+<?php View::flash(); ?>
+
+<style type="text/css">
+    .tab-pane { min-height: 200px;}
+</style>
+
+<div class="container shell-view">
+
+    <?php View::process($page_module, $page_title, $set_title); ?>
+
+    <?php echo DwForm::open(); ?>
+
+        <?php if(IS_DESKTOP) { ?>
+        <ul class="nav nav-tabs">
+        <?php } else { ?>
+        <ul class="nav nav-pills nav-stacked">
+        <?php } ?>
+            <li class="active"><a href="#tab1" data-toggle="tab">Información general</a></li>
+            <?php if(!APP_OFFICE) { ?>
+            <li><a href="#tab2" data-toggle="tab">Información de ubicación</a></li>
+            <?php } ?>
+            <li><a href="#tab3" data-toggle="tab">Cargar logo</a></li>
+        </ul>
+        <div class="tab-content">
+
+            <div class="tab-pane active" id="tab1">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php echo DwForm::text('empresa.razon_social', array('class'=>'input-xxlarge input-required mask-alphanum show-error'), NULL, 'Nombre o razón social'); ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?php echo DwForm::text('empresa.siglas', array('class'=>'input-xxlarge input-required mask-alphanum show-error'), NULL, 'Siglas o abrevación'); ?>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php echo DwForm::text('empresa.nit', array('class'=>'input-xxlarge input-required show-error'), NULL, 'RUC'); ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?php echo DwForm::number('empresa.dv', array('class'=>'input-small input-required mask-pint show-error'), NULL, 'Dígito de verificación'); ?>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php echo DwForm::text('empresa.representante_legal', array('class'=>'input-xxlarge input-required mask-alphanum show-error'), NULL, 'Representante legal'); ?>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php echo DwForm::number('empresa.nuip', array('class'=>'input-xxlarge input-required mask-pint show-error'), NULL, 'No. Usuario del Rep. legal'); ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?php echo DwForm::dbSelect('empresa.tipo_nuip_id', 'tipo_nuip', array('params/tipo_nuip', 'getListadoTipoNuip'), NULL, array('class'=>'input-xxlarge input-required mask-pint show-errors'), NULL, 'Tipo de identificación'); ?>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php echo DwForm::url('empresa.pagina_web', array('class'=>'input-xxlarge show-error'), NULL, 'Página web'); ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?php echo DwForm::email('empresa.email', array('class'=>'input-xxlarge mask-email show-error'), NULL, 'Email'); ?>
+                    </div>
+                </div>
+                <?php if(APP_OFFICE) { ?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php echo DwForm::number('empresa.telefono', array('class'=>'input-xxlarge mask-pint show-error'), NULL, 'Teléfono'); ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?php echo DwForm::number('empresa.fax', array('class'=>'input-xxlarge show-error'), NULL, 'Fax'); ?>
+                    </div>
+                </div>
+                <?php } ?>
+
+            </div>
+
+            <?php if(!APP_OFFICE) { ?>
+            <div class="tab-pane" id="tab2">
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php echo DwForm::text('sucursal.direccion', array('class'=>'input-xxlarge input-required input-alphanum mask-alphanum show-error'), NULL, 'Dirección'); ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?php echo DwForm::text('ciudad', array('class'=>'input-xxlarge input-required input-alphanum mask-alphanum show-error', 'autocomplete'=>'off'), empty($sucursal->ciudad) ? NULL : $sucursal->ciudad, 'Ciudad'); ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <?php echo DwForm::number('sucursal.celular', array('class'=>'input-numeric mask-pint show-error'), NULL, 'Celular'); ?>
+                    </div>
+                    <div class="col-md-4">
+                        <?php echo DwForm::number('sucursal.telefono', array('class'=>'input-numeric mask-pint show-error'), NULL, 'Teléfono'); ?>
+                    </div>
+                    <div class="col-md-4">
+                        <?php echo DwForm::number('sucursal.fax', array('class'=>'input-numeric mask-pint show-error'), NULL, 'Fax'); ?>
+                    </div>
+                    <?php if(!empty($sucursal->id)) { ?>
+                    <?php echo DwForm::hidden('sucursal.id', NULL, $sucursal->id); ?>
+                    <?php } ?>
+                </div>
+            </div>
+            <?php } ?>
+
+            <div class="tab-pane" id="tab3">
+                <div class="row fileupload-buttonbar">
+
+                    <div class="col-md-6" style="margin-bottom: 20px;">
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <?php echo DwForm::upload('logo', array('data-to'=>PUBLIC_PATH.'config/empresa/upload/', 'data-size'=>5000000, 'data-files'=>'images', 'data-success'=>'loadImg'), 'Fotografía'); ?>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="picture-profile text-center text-middle shadow-dark" style="margin: 5px auto 0px;">
+                                    <?php echo DwHtml::img("upload/empresa/$empresa->logo", "Fotografía", array('id'=>'img-empresa')); ?>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <?php echo DwForm::hidden('empresa.id', $empresa->id); ?>
+                <?php echo DwForm::hidden('empresa.logo', NULL, $empresa->logo); ?>
+
+                <div class="form-actions">
+                    <?php echo DwForm::send('Guardar información'); ?>
+                    <?php echo DwForm::cancel(); ?>
+                </div>
+            </div>
+
+        </div>
+
+    <?php echo DwForm::close(); ?>
+
+</div>
+
+<?php if(!APP_OFFICE) { ?>
+<script type="text/javascript">
+    var ciudades = <?php echo $ciudades; ?>;
+    $(function() {
+        $('#ciudad').typeahead({
+                source: ciudades, items:5
+        });
+    });
+</script>
+<?php } ?>
+
+<script type="text/javascript">
+    function loadImg(result, input) {
+        $("#empresa_logo").val(result.name);
+        $("#img-empresa").attr('src', '<?php echo PUBLIC_PATH; ?>img/upload/empresa/'+result.name);                
+    }
+
+</script>

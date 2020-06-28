@@ -1,0 +1,53 @@
+<?php View::flash(); ?>
+
+<script type="text/javascript">
+    $(function() {
+        $('table').kgrid({
+            order_attr      : '<?php echo (APP_AJAX) ? 'class="js-link js-spinner"' : ''; ?>',
+            order_to        : $.KumbiaPHP.publicPath+'config/sucursal/listar/'
+        });        
+    });
+</script>
+
+<div class="container shell-view">
+
+    <?php View::process($page_module, $page_title, $set_title); ?>
+
+    <div class="btn-toolbar btn-toolbar-top">
+        <div class="btn-actions">
+            <?php echo DwHtml::button("config/sucursal/agregar/", 'agregar', array('class'=>'btn-success'), 'fa-plus', APP_AJAX); ?>
+        </div>
+    </div>
+
+    <div class="container-overflow">
+
+        <table class="table table-bordered table-hover table-striped table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th class="col-hidden" data-search="sucursal" data-order="sucursal">Ciudad</th>
+                    <th class="col-blocked text-center" style="width: 100px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($sucursales->items as $sucursal): ?>
+                    <?php $key_upd = Security::setKey($sucursal->id, 'upd_sucursal'); ?>
+                    <?php $key_del = Security::setKey($sucursal->id, 'del_sucursal'); ?>
+                    <tr>
+                        <td><?php echo $sucursal->id; ?></td>
+                        <td><?php echo $sucursal->sucursal; ?></td>
+                        <td>
+                            <?php echo DwHtml::buttonTable('Modificar ciudad', "config/sucursal/editar/$key_upd/", null, 'info', 'fa-edit'); ?>
+                            <?php echo DwHtml::buttonTable('Eliminar ciudad', "#", array('class'=>'js-confirm', 'data-to'=>PUBLIC_PATH."config/sucursal/eliminar/$key_del/", 'msg-title'=>'Eliminar sucursal', 'msg'=>'¿Estás seguro de eliminar esta ciudad? <br />Recordá que esta operación no se puede revertir.'), 'danger', 'fa-warning'); ?>
+                        </td>
+                    </tr>
+                    <?php $sucursal->counter++; ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+    </div>
+
+    <?php View::partial('paginators/default', false, array('page'=>$sucursales, 'url'=>"config/sucursal/listar/$order/")); ?>
+
+</div>

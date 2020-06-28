@@ -1,0 +1,161 @@
+<?php
+$nombre_mes1 = "Mes 1";
+$nombre_mes2 = "Mes 2";
+$nombre_mes3 = "Mes 3";
+$nombre_mes4 = "Mes 4";
+$nombre_mes5 = "Mes 5";
+$nombre_mes6 = "Mes 6";
+$nombre_mes7 = "Mes 7";
+$nombre_mes8 = "Mes 8";
+$nombre_mes9 = "Mes 9";
+$nombre_mes10 = "Mes 10";
+$nombre_mes11 = "Mes 11";
+$nombre_mes12 = "Mes 12";
+
+//Exportar datos de php a Excel
+header("Content-Type: application/vnd.ms-excel");
+header("Expires: 0");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+header("content-disposition: attachment;filename=presupuesto_general.xls");
+?>
+
+<HTML LANG="es">
+<head>
+<TITLE>Presupuesto</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+    <h1>Presupuesto</h1>
+    <br>
+    <table border="1" class="table table-bordered table-hover table-condensed table-responsive">
+        <thead>
+            <tr bgcolor="#EEF8FC">
+                <th>ID</th>
+                <th class="col-collapse" data-search="codigo_cta">Codigo</th>
+                <th class="col-collapse" data-search="nombre_cta">Nombre de la Cta.</th>
+                <th class="col-collapse" data-search="mes1"><?php echo $nombre_mes1; ?></th>
+                <th class="col-collapse" data-search="mes2"><?php echo $nombre_mes2; ?></th>
+                <th class="col-collapse" data-search="mes3"><?php echo $nombre_mes3; ?></th>
+                <th class="col-collapse" data-search="mes4"><?php echo $nombre_mes4; ?></th>
+                <th class="col-collapse" data-search="mes5"><?php echo $nombre_mes5; ?></th>
+                <th class="col-collapse" data-search="mes6"><?php echo $nombre_mes6; ?></th>
+                <th class="col-collapse" data-search="mes7"><?php echo $nombre_mes7; ?></th>
+                <th class="col-collapse" data-search="mes8"><?php echo $nombre_mes8; ?></th>
+                <th class="col-collapse" data-search="mes9"><?php echo $nombre_mes9; ?></th>
+                <th class="col-collapse" data-search="mes10"><?php echo $nombre_mes10; ?></th>
+                <th class="col-collapse" data-search="mes11"><?php echo $nombre_mes11; ?></th>
+                <th class="col-collapse" data-search="mes12"><?php echo $nombre_mes12; ?></th>
+                <th class="col-collapse" data-search="mes12">Total</th>
+                <th class="col-collapse" data-search="observaciones">Notas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $total_mes1 = 0;
+            $total_mes2 = 0;
+            $total_mes3 = 0;
+            $total_mes4 = 0;
+            $total_mes5 = 0;
+            $total_mes6 = 0;
+            $total_mes7 = 0;
+            $total_mes8 = 0;
+            $total_mes9 = 0;
+            $total_mes10 = 0;
+            $total_mes11 = 0;
+            $total_mes12 = 0;
+            $total_cta = 0;
+            
+            foreach($apresupgeneralpag as $apresupgeneral):
+                ?>
+                <tr>
+                    <td><?php echo $apresupgeneral->id; ?></td>
+                    <td><?php echo $apresupgeneral->codigo_cta; ?></td>
+                    <td><?php echo $apresupgeneral->nombre_cta; ?></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes1, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes2, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes3, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes4, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes5, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes6, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes7, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes8, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes9, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes10, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes11, 2); ?></div></td>
+                    <td><div align="right"><?php echo number_format($apresupgeneral->mes12, 2); ?></div></td>
+                    <td><div align="right"><?php 
+                    $tot_cta = $apresupgeneral->mes1+$apresupgeneral->mes2+$apresupgeneral->mes3+$apresupgeneral->mes4+$apresupgeneral->mes5+$apresupgeneral->mes6+$apresupgeneral->mes7+$apresupgeneral->mes8+$apresupgeneral->mes9+$apresupgeneral->mes10+$apresupgeneral->mes11+$apresupgeneral->mes12;
+                    
+                    echo number_format($tot_cta, 2); ?></div></td>
+                    <td><?php echo $apresupgeneral->observaciones; ?></td>
+                </tr>
+                <?php $apresupgeneral->counter++;
+                
+                // Saco los totales por cada mes
+                $total_mes1=$total_mes1+$apresupgeneral->mes1;
+                $total_mes2=$total_mes2+$apresupgeneral->mes2;    
+                $total_mes3=$total_mes3+$apresupgeneral->mes3;
+                $total_mes4=$total_mes4+$apresupgeneral->mes4;
+                $total_mes5=$total_mes5+$apresupgeneral->mes5;
+                $total_mes6=$total_mes6+$apresupgeneral->mes6;
+                $total_mes7=$total_mes7+$apresupgeneral->mes7;
+                $total_mes8=$total_mes8+$apresupgeneral->mes8;
+                $total_mes9=$total_mes9+$apresupgeneral->mes9;
+                $total_mes10=$total_mes10+$apresupgeneral->mes10;
+                $total_mes11=$total_mes11+$apresupgeneral->mes11;
+                $total_mes12=$total_mes12+$apresupgeneral->mes12;
+                $total_cta=$total_cta+$tot_cta;
+
+                 ?>
+            <?php endforeach; ?>
+            <tr bgcolor="#EEF8FC">
+                <td colspan="3">
+                    <div align="right" style="font-size: 14px"><strong>PRESUPUESTO TOTAL....</strong></div>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes1, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes2, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes3, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes4, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes5, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes6, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes7, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes8, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes9, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes10, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes11, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 14px"><strong><?php echo number_format($total_mes12, 2); ?></div></strong>
+                </td>
+                <td>
+                    <div align="right" style="font-size: 16px"><strong><?php echo number_format($total_cta, 2); ?></div></strong>
+                </td>
+                <td> 
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</BODY>
+</HTML>
+?>

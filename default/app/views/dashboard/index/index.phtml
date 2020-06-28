@@ -1,0 +1,17 @@
+<?php View::flash(); ?>
+
+<div class="container shell-view">
+    
+    <?php View::process($page_module, $page_title, $set_title); ?>
+
+    <div class="container-overflow">
+            
+	</div>    
+</div>
+
+<script>
+$(function(){
+    // Esto es para evitar que el sub-menú se esconda al recargar la página
+    $("#sub-menu-inicio").removeClass("hidden");
+});
+</script>

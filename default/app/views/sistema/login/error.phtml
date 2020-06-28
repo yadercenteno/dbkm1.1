@@ -1,0 +1,40 @@
+<?php View::flash(); ?>
+
+<div class="account-container">
+
+    <div class="content" style="background-color:#292929;">
+
+        <div align="center" class="dw-text-center" style="width: 100%; margin: 0 auto;">
+            <?php echo DwHtml::img("upload/empresa/".APP_CLIENT_LOGO, APP_CLIENT, array('style'=>'margin-top: 18px; height: 40px;'));?>
+        </div>
+
+        <div class="row">&nbsp;</div>
+        <br>
+        <div class="row" align="center">
+            <h4 style="color: white;"><b>ERROR</b></h3>
+            <br>
+            <h5><?php 
+            switch ($numero) {
+                case 1:
+                    $mensaje = "Tu usuario se encuentra inactivo. <br />Contactá al Administrador del sistema.";
+                    break;
+                
+                default:
+                    $mensaje = "Algo salió mal con tu usuario y contraseña.";
+                    break;
+            }
+
+            echo $mensaje; ?></h4>
+
+            <br>
+            <div class="row">&nbsp;</div>
+
+            <div style="color: white; font-size: 1.15em;">
+                Volver a intentarlo <?php echo Html::link('sistema/login/entrar/', 'AQUI'); ?>
+            </div>
+
+        </div>                
+
+    </div>
+
+</div>
