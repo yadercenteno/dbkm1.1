@@ -7,6 +7,8 @@ Esta versión está basada en el DBKM original de argordmel que se puede encontr
 1. CRUD de un Catalogo de cuentas sencillo (Código y Nombre de cuents) con ejemplo de informe visual, versión exportable a Excel y opción de importar datos desde Excel usando una plantilla provista por el mismo DBKM.
 2. Listado de presupuesto de 1 sola página (todo se hace desde 1 sola vista) donde se puede agregar, eliminar y editar esos datos por AJAX.  Para editar, se hace uso de la librería jquery-jeditable, la cual permite hacer cambios solo dando click con el ratón sobre el campo que se quiere editar "in-line" (ahí mismo).
 
+![image](https://i.ibb.co/bm9K2FC/dbkm1-1.png)
+
 
 Instalación
 -------------------
