@@ -16,6 +16,9 @@ Para instalar el DBKM simplemente lo descargas, creas una base de datos MySQL ll
 
 Esta versión del DBKM ha sido probada sobre PHP 7.2 y 7.3 usando Apache como web server y MySQL como gestor de Base de Datos.
 
+Aquí también dejo un Live demo de esta versión del dbkm:
+https://vamosleones.net/dbkm1.1/sistema/login/entrar/ 
+
 
 Usuarios incluidos
 -------------------
