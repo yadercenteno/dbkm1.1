@@ -159,7 +159,17 @@ class ApresupgeneralController extends BackendController {
                         
                         $mensaje = $acuentas->codigo_cta.' - '.$acuentas->nombre_cta;
                     }
-                    break;                    
+                    break; 
+
+                case "observaciones":
+                    $valor = str_replace(":", "", $valor);
+                    $valor = str_replace(";", "", $valor);
+                    $valor = str_replace("'", "", $valor);
+
+                    if (Apresupgeneral::setApresupgeneral('update', $apresupgeneral->to_array(), array('id'=>$id_presup, $campo=>$valor))) { 
+                        $mensaje = $valor;
+                    }
+                    break;                       
 
                 // Aplica a los demás campos (presupuestos mes por mes)
                 // NO especificados arriba

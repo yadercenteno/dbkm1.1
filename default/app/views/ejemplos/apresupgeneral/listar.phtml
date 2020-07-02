@@ -171,7 +171,8 @@
                         $tot_cta = $apresupgeneral->mes1+$apresupgeneral->mes2+$apresupgeneral->mes3+$apresupgeneral->mes4+$apresupgeneral->mes5+$apresupgeneral->mes6+$apresupgeneral->mes7+$apresupgeneral->mes8+$apresupgeneral->mes9+$apresupgeneral->mes10+$apresupgeneral->mes11+$apresupgeneral->mes12;
                         
                         echo "<div align='right' id='".$apresupgeneral->id."@presup_total'>".number_format((float)$tot_cta, 2, '.', '')."</div>"; ?></td>
-                        <td><?php echo $apresupgeneral->observaciones; ?></td>
+                        <td><?php
+                         echo "<div class='editar_observaciones' id='".$apresupgeneral->id."@observaciones'>".$apresupgeneral->observaciones."</div>"; ?></td>
                         <td>
                         <?php 
                         // Compruebo que el usuario tenta privilegios suficientes para estar usar esta función
@@ -406,6 +407,14 @@ echo Tag::js('jquery/jquery.jeditable.min');
             type      : "select",
             data      : listado_cuentas,
             style     : "inherit"
+        });
+
+        $('.editar_observaciones').editable($.KumbiaPHP.publicPath+"ejemplos/apresupgeneral/guardarDato/", {
+             indicator : 'Guardando...',
+             tooltip   : 'Click para editar...',
+             type      : 'text',
+             cancel    : 'Cancelar',
+             submit    : 'Guardar'
         });
 
         $('.editar_mes').editable($.KumbiaPHP.publicPath+"ejemplos/apresupgeneral/guardarDato/", {
